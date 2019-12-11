@@ -11,7 +11,6 @@ const INITIAL_STATE = {
   password: "",
 }
 
-
 function Login(props) {
   const {
     handleSubmit,
@@ -21,14 +20,18 @@ function Login(props) {
     errors,
     isSubmitting } = useFormValidation(INITIAL_STATE, validateLogin, authenticateUser);
   const [login, setLogin] = React.useState(true);
+  const [firebaseError, setFirebaseError] = React.useState(null);
 
   async function authenticateUser() {
     const { name, email, password } = values;
-    const response = login
-      ? await firebase.login(email, password)
-      : await firebase.register(name, email, password)
-
-    console.log({ response })
+    try {
+      login
+        ? await firebase.login(email, password)
+        : await firebase.register(name, email, password)
+    } catch (err) {
+      console.error('Authentication Error', err);
+      setFirebaseError(err.message);
+    }
   }
 
   return (
@@ -54,7 +57,9 @@ function Login(props) {
           placeholder="Your email"
           autoComplete="off"
         />
+
         {errors.email && <p className="error-text">{errors.email}</p>}
+
         <input
           onChange={handleChange}
           onBlur={handleBlur}
@@ -64,7 +69,10 @@ function Login(props) {
           className={errors.password && 'error-input'}
           placeholder="Choose a secure password"
         />
+
         {errors.password && <p className="error-text">{errors.password}</p>}
+        {firebaseError && <p className="error-text">{firebaseError}</p>}
+
         <div className="flex mt3">
           <button type="submit" className="button pointer mr2" disabled={isSubmitting}
             style={{ background: isSubmitting ? "grey" : "orange" }}
