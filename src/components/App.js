@@ -11,7 +11,7 @@ import Header from "./Header";
 function App() {
   return (
     <BrowserRouter>
-      <div className="app_container">
+      <div className="app-container">
         <Header />
         <div className="route-container">
           <Switch>
