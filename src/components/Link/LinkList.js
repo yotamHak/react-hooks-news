@@ -27,7 +27,7 @@ function LinkList(props) {
         links.map((link, index) => (
           <LinkItem
             key={link.id}
-            shotCount={true}
+            showCount={true}
             link={link}
             index={index + 1}
           />
